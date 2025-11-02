@@ -3,6 +3,11 @@ import { Job, CreateJobData, UpdateJobData } from '@/types';
 
 const getApiUrl = () => {
   if (typeof window !== 'undefined') {
+    // If running on localhost, use the Express server
+    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+      return 'http://localhost:5000/api';
+    }
+    // Otherwise use Vercel API routes
     return `${window.location.origin}/api`;
   }
   

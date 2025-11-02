@@ -19,6 +19,7 @@ export default function JobModal({ isOpen, onClose, onSave, job }: JobModalProps
     status: 'Applied',
     dateApplied: new Date().toISOString().split('T')[0],
   });
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   useEffect(() => {
     if (job) {
@@ -48,7 +49,7 @@ export default function JobModal({ isOpen, onClose, onSave, job }: JobModalProps
 
   return (
     <div className="fixed inset-0 bg-black/60 dark:bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fade-in">
-      <div className="bg-white dark:bg-slate-800 rounded-2xl p-6 w-full max-w-md shadow-2xl animate-scale-in max-h-[90vh] overflow-visible relative">
+      <div className="bg-white dark:bg-slate-800 rounded-2xl p-6 w-full max-w-md shadow-2xl animate-scale-in max-h-[90vh] overflow-hidden relative">
         {/* Header */}
         <div className="mb-6">
           <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
@@ -92,21 +93,37 @@ export default function JobModal({ isOpen, onClose, onSave, job }: JobModalProps
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
               Status
             </label>
-            <div className="grid grid-cols-2 gap-2">
-              {statuses.map((status) => (
-                <button
-                  key={status}
-                  type="button"
-                  onClick={() => setFormData({ ...formData, status })}
-                  className={`px-3 py-2 text-sm rounded-md border transition-colors ${
-                    formData.status === status
-                      ? 'bg-blue-600 text-white border-blue-600'
-                      : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700'
-                  }`}
-                >
-                  {status}
-                </button>
-              ))}
+            <div className="relative">
+              <button
+                type="button"
+                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 text-left flex justify-between items-center"
+              >
+                <span>{formData.status}</span>
+                <svg className={`w-4 h-4 transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+              
+              {isDropdownOpen && (
+                <div className="absolute z-10 w-full mt-1 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md shadow-lg max-h-40 overflow-auto">
+                  {statuses.map((status) => (
+                    <button
+                      key={status}
+                      type="button"
+                      onClick={() => {
+                        setFormData({ ...formData, status });
+                        setIsDropdownOpen(false);
+                      }}
+                      className={`w-full px-3 py-2 text-left hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors ${
+                        formData.status === status ? 'bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400' : 'text-gray-900 dark:text-gray-100'
+                      }`}
+                    >
+                      {status}
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
           
