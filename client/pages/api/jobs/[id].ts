@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { PrismaClient } from '@prisma/client';
 
+const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
 const formatJobStatus = (status: string): string => {
@@ -13,13 +13,13 @@ const formatJobStatus = (status: string): string => {
   }
 };
 
-const parseJobStatus = (status: string): string => {
+const parseJobStatus = (status: string) => {
   switch (status) {
-    case 'Applied': return 'APPLIED';
-    case 'Interviewing': return 'INTERVIEWING';
-    case 'Offer Received': return 'OFFER_RECEIVED';
-    case 'Rejected': return 'REJECTED';
-    default: return 'APPLIED';
+    case 'Applied': return 'APPLIED' as const;
+    case 'Interviewing': return 'INTERVIEWING' as const;
+    case 'Offer Received': return 'OFFER_RECEIVED' as const;
+    case 'Rejected': return 'REJECTED' as const;
+    default: return 'APPLIED' as const;
   }
 };
 
