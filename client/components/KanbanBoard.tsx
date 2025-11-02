@@ -266,26 +266,28 @@ export default function KanbanBoard() {
           onDragOver={handleDragOver}
           onDragEnd={handleDragEnd}
         >
-          {/* Mobile: Vertical Stack */}
-          <div className="block sm:hidden space-y-4">
-            {statuses.map((status, index) => (
-              <div
-                key={status}
-                className="animate-slide-up"
-                style={{ animationDelay: `${index * 0.1}s` }}
-              >
-                <KanbanColumn
-                  status={status}
-                  jobs={getPaginatedJobs(status)}
-                  totalJobs={jobs.filter(job => job.status === status).length}
-                  currentPage={currentPage[status]}
-                  totalPages={getTotalPages(status)}
-                  onPageChange={(page) => handlePageChange(status, page)}
-                  onEdit={openEditModal}
-                  onDelete={handleDeleteJob}
-                />
-              </div>
-            ))}
+          {/* Mobile: Horizontal Scroll */}
+          <div className="block sm:hidden">
+            <div className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory">
+              {statuses.map((status, index) => (
+                <div
+                  key={status}
+                  className="flex-shrink-0 w-80 snap-start animate-slide-up"
+                  style={{ animationDelay: `${index * 0.1}s` }}
+                >
+                  <KanbanColumn
+                    status={status}
+                    jobs={getPaginatedJobs(status)}
+                    totalJobs={jobs.filter(job => job.status === status).length}
+                    currentPage={currentPage[status]}
+                    totalPages={getTotalPages(status)}
+                    onPageChange={(page) => handlePageChange(status, page)}
+                    onEdit={openEditModal}
+                    onDelete={handleDeleteJob}
+                  />
+                </div>
+              ))}
+            </div>
           </div>
           
           {/* Tablet: 2x2 Grid */}
