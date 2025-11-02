@@ -1,0 +1,70 @@
+import { NextApiRequest, NextApiResponse } from 'next';
+import { PrismaClient } from '@prisma/client';
+
+const prisma = new PrismaClient();
+
+const formatJobStatus = (status: string): string => {
+  switch (status) {
+    case 'APPLIED': return 'Applied';
+    case 'INTERVIEWING': return 'Interviewing';
+    case 'OFFER_RECEIVED': return 'Offer Received';
+    case 'REJECTED': return 'Rejected';
+    default: return 'Applied';
+  }
+};
+
+const parseJobStatus = (status: string): string => {
+  switch (status) {
+    case 'Applied': return 'APPLIED';
+    case 'Interviewing': return 'INTERVIEWING';
+    case 'Offer Received': return 'OFFER_RECEIVED';
+    case 'Rejected': return 'REJECTED';
+    default: return 'APPLIED';
+  }
+};
+
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  if (req.method === 'GET') {
+    try {
+      const jobs = await prisma.job.findMany({
+        orderBy: { createdAt: 'desc' }
+      });
+      
+      const formattedJobs = jobs.map(job => ({
+        ...job,
+        _id: job.id,
+        status: formatJobStatus(job.status)
+      }));
+      
+      res.json(formattedJobs);
+    } catch (error) {
+      res.status(500).json({ message: 'Error fetching jobs', error });
+    }
+  } else if (req.method === 'POST') {
+    try {
+      const { company, role, status, dateApplied } = req.body;
+      
+      const job = await prisma.job.create({
+        data: {
+          company,
+          role,
+          status: parseJobStatus(status),
+          dateApplied: new Date(dateApplied),
+        }
+      });
+      
+      const formattedJob = {
+        ...job,
+        _id: job.id,
+        status: formatJobStatus(job.status)
+      };
+      
+      res.status(201).json(formattedJob);
+    } catch (error) {
+      res.status(400).json({ message: 'Error creating job', error });
+    }
+  } else {
+    res.setHeader('Allow', ['GET', 'POST']);
+    res.status(405).end(`Method ${req.method} Not Allowed`);
+  }
+}
