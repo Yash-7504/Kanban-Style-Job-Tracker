@@ -131,14 +131,25 @@ export default function JobModal({ isOpen, onClose, onSave, job }: JobModalProps
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
               Date Applied
             </label>
-            <input
-              type="date"
-              required
-              value={formData.dateApplied}
-              onChange={(e) => setFormData({ ...formData, dateApplied: e.target.value })}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
-              style={{ boxSizing: 'border-box', maxWidth: '100%' }}
-            />
+            <div className="w-full" style={{ display: 'block', width: '100%' }}>
+              <input
+                type="date"
+                required
+                value={formData.dateApplied}
+                onChange={(e) => setFormData({ ...formData, dateApplied: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
+                style={{ 
+                  boxSizing: 'border-box', 
+                  width: '100%',
+                  maxWidth: '100%',
+                  WebkitAppearance: 'none',
+                  MozAppearance: 'textfield',
+                  display: 'block',
+                  margin: '0',
+                  padding: '0.5rem 0.75rem'
+                }}
+              />
+            </div>
           </div>
           
           <div className="flex gap-3 pt-4">
